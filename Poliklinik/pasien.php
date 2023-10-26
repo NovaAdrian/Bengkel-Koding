@@ -3,8 +3,43 @@ $mysqli = mysqli_connect("localhost", "root", "", "poliklinik");
 if (!$mysqli) {
     die("Koneksi ke database gagal: " . mysqli_connect_error());
 }
-?>
 
+if (isset($_POST['simpan'])) {
+    $id = $_POST['id'];
+    $nama = $_POST['nama'];
+    $alamat = $_POST['alamat'];
+    $no_hp = $_POST['no_hp'];
+
+    if (empty($id)) {
+        // Jika ID kosong, maka ini adalah operasi INSERT
+        $query = "INSERT INTO pasien (nama, alamat, no_hp) VALUES ('$nama', '$alamat', '$no_hp')";
+    } else {
+        // Jika ID tidak kosong, maka ini adalah operasi UPDATE
+        $query = "UPDATE pasien SET nama='$nama', alamat='$alamat', no_hp='$no_hp' WHERE id='$id'";
+    }
+
+    if (mysqli_query($mysqli, $query)) {
+        // Operasi berhasil, arahkan kembali ke halaman pasien.php
+        header("Location: index.php?page=pasien");
+    } else {
+        // Operasi gagal
+        echo "Error: " . mysqli_error($mysqli);
+    }
+}
+
+if (isset($_GET['aksi']) && $_GET['aksi'] == 'hapus' && isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $query = "DELETE FROM pasien WHERE id='$id'";
+
+    if (mysqli_query($mysqli, $query)) {
+        // Operasi berhasil, arahkan kembali ke halaman pasien.php
+        header("Location: index.php?page=pasien");
+    } else {
+        // Operasi gagal
+        echo "Error: " . mysqli_error($mysqli);
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,18 +47,15 @@ if (!$mysqli) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap Online -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
-    rel="stylesheet" 
-    crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <title>pasien</title>
 </head>
-
 <body>
 
     <div class="container">
 
         <!-- Form Input Data pasien -->
-        <form class="mt-3" method="POST" action="proses_pasien.php">
+        <form class="mt-3" method="POST" action="">
             <?php
             $id = '';
             $nama = '';
@@ -67,9 +99,9 @@ if (!$mysqli) {
         <table class="table mt-4">
             <thead>
                 <tr>
-                <th>#</th>
-                    <th>Nama Pasien</th>
-                    <th>Alamat Pasien</th>
+                    <th>#</th>
+                    <th>Nama pasien</th>
+                    <th>Alamat pasien</th>
                     <th>Nomor HP</th>
                     <th>Aksi</th>
                 </tr>
@@ -86,9 +118,8 @@ if (!$mysqli) {
                         <td><?php echo $data['alamat'] ?></td>
                         <td><?php echo $data['no_hp'] ?></td>
                         <td>
-                            <a class="btn btn-success rounded-pill px-3" href="pasien.php?id=<?php echo $data['id'] ?>">Ubah</a>
-                            <a class="btn btn-danger rounded-pill px-3" href="proses_pasien.php?id=<?php echo $data['id'] ?>&aksi=hapus">Hapus</a>
-                        </td>
+                            <a class="btn btn-success rounded-pill px-3" href="index.php?page=pasien&id=<?php echo $data['id'] ?>">Ubah</a>
+                            <a class="btn btn-danger rounded-pill px-3" href="index.php?page=pasien&aksi=hapus&id=<?php echo $data['id'] ?>">Hapus</a>                          </td>
                     </tr>
                 <?php
                 }
