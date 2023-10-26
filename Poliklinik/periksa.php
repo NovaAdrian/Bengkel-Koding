@@ -23,7 +23,7 @@ if (isset($_POST['simpan'])) {
     $result = mysqli_query($mysqli, $query);
 
     if ($result) {
-        header("Location: periksa.php"); // Redirect ke halaman periksa setelah berhasil
+        header("Location: index.php?page=periksa"); // Redirect ke halaman periksa setelah berhasil
         exit();
     } else {
         echo "Error: " . mysqli_error($mysqli);
@@ -36,7 +36,7 @@ if (isset($_GET['aksi']) && $_GET['aksi'] == 'hapus' && isset($_GET['id'])) {
     $result = mysqli_query($mysqli, $query);
 
     if ($result) {
-        header("Location: periksa.php"); // Redirect ke halaman periksa setelah berhasil menghapus data
+        header("Location: index.php?page=periksa"); // Redirect ke halaman periksa setelah berhasil menghapus data
         exit();
     } else {
         echo "Error: " . mysqli_error($mysqli);
@@ -60,7 +60,7 @@ if (isset($_GET['aksi']) && $_GET['aksi'] == 'hapus' && isset($_GET['id'])) {
     <div class="container">
 
         <!-- Form Input Data Periksa -->
-        <form class="form" method="POST" action="proses_periksa.php">
+        <form class="form" method="POST" action="">
             <?php
             $id = '';
             $id_dokter = '';
@@ -148,8 +148,8 @@ if (isset($_GET['aksi']) && $_GET['aksi'] == 'hapus' && isset($_GET['id'])) {
                         <td><?php echo $data['tgl_periksa'] ?></td>
                         <td><?php echo $data['catatan'] ?></td>
                         <td>
-                            <a class="btn btn-success rounded-pill px-3" href="periksa.php?id=<?php echo $data['id'] ?>">Ubah</a>
-                            <a class="btn btn-danger rounded-pill px-3" href="proses_periksa.php?id=<?php echo $data['id'] ?>&aksi=hapus">Hapus</a>
+                            <a class="btn btn-success rounded-pill px-3" href="index.php?page=periksa&id=<?php echo $data['id'] ?>">Ubah</a>
+                            <a class="btn btn-danger rounded-pill px-3" href="index.php?page=periksa&aksi=hapus&id=<?php echo $data['id'] ?>&aksi=hapus">Hapus</a>
                         </td>
                     </tr>
                 <?php
